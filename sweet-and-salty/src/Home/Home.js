@@ -1,4 +1,3 @@
-import { Component } from "react";
 import Background from '../img/background_image.jpg';
 import { makeStyles } from "@material-ui/core/styles";
 import Button from '@mui/material/Button';

@@ -1,4 +1,3 @@
-import { Flowchart } from '../Flowchart/Flowchart';
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,6 +6,7 @@ import {
 } from "react-router-dom";
 import RecipeDisplay from '../RecipeDisplay/recipeDisplay';
 import Home from '../Home/Home';
+import RecipeFinder from '../RecipeFinder/RecipeFinder';
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
           renders the first one that matches the current URL. */}
       <Switch>
         <Route path="/flow">
-          <Flowchart />
+          <RecipeFinder />
         </Route>
         <Route path="/recipes">
           <RecipeDisplay />

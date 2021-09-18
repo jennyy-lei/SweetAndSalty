@@ -126,7 +126,7 @@ export class Flowchart extends React.Component {
               nodeStrokeWidth={3}
             />
           </ReactFlow>
-        </ReactFlowProvider>
+        </ReactFlowProvider>      
       </div>
     );
   }
