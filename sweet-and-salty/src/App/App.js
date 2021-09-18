@@ -1,8 +1,7 @@
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import RecipeDisplay from '../RecipeDisplay/recipeDisplay';
 import Home from '../Home/Home';

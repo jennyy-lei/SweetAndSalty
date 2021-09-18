@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Flowchart.css";
-import ReactFlow, { MiniMap, ReactFlowProvider, useStoreState, useZoomPanHelper } from 'react-flow-renderer';
+import ReactFlow, { MiniMap, ReactFlowProvider, useStoreState } from 'react-flow-renderer';
 import { nodeTypes } from "./Item/Item";
 
 export function Flowchart() {
@@ -28,16 +28,16 @@ export function Flowchart() {
 function Scroll(props) {
   const bar = useRef(null);
   const transform = useStoreState((store) => store.transform);
-  const { setCenter } = useZoomPanHelper();
+  // const { setCenter } = useZoomPanHelper();
 
   const [barWidth, setBarWidth] = useState(100);
   const [barRight, setBarRight] = useState(0);
   const [width, setWidth] = useState({cw: 0, w: 0});
 
-  let mouseDown = false;
+  // let mouseDown = false;
+  // let startPos;
 
   useEffect(() => {
-    console.log(width.cw, width.w);
     if (width.cw - width.w > 0) setBarRight(transform[0] / (width.cw - width.w) * (100 - barWidth));
     else setBarRight(0);
   }, [transform[0]]);
@@ -49,13 +49,21 @@ function Scroll(props) {
     setBarWidth(screenW / calcW * 100);
   })
 
-  bar.current?.addEventListener("mousedown", () => { mouseDown = true })
-  bar.current?.addEventListener("mouseup", () => { mouseDown = false })
-  bar.current?.addEventListener("mousemove", (ev) => {
-    if (mouseDown) {
-      console.log(ev)
-    }
-  })
+  // bar.current?.addEventListener("mousedown", (ev) => {
+  //   if (!mouseDown) startPos = ev.screenX;
+  //   mouseDown = true
+  // })
+  // bar.current?.addEventListener("mouseup", () => { mouseDown = false })
+  // bar.current?.addEventListener("mousemove", (ev) => {
+  //   if (mouseDown) {
+  //     let leftDist = (100 - barRight - barWidth) / 100 * width.w;
+  //     let rightDist = barRight / 100 * width.w;
+  //     let dx = ev.screenX - startPos;
+  //     if (dx < 0 && -dx < leftDist) {
+  //       setBarRight((rightDist - dx) / width.w * 100);
+  //     }
+  //   }
+  // })
 
   return (
     <div className="scroll-wrapper">
