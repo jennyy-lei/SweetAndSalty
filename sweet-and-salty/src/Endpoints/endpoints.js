@@ -1,9 +1,10 @@
 import axios from "axios";
 
-export const httpGet = (endPoint) => {
-
+const prefix = "";
+export const httpGet = (endpoint) => {
+    const url = prefix + endpoint;
     return axios
-        .get(endPoint, {
+        .get(url, {
             headers: {
                 "Content-Type": "application/json",
             }
@@ -13,11 +14,11 @@ export const httpGet = (endPoint) => {
         });
 };
 
-export const httpPost = (endPoint, body) => {
-
+export const httpPost = (endpoint, body) => {
+    const url = prefix + endpoint;
     return new Promise((resolve, reject) => {
         axios
-            .post(endPoint, body)
+            .post(url, body)
             .then((response) => {
                 resolve(response);
             })
@@ -27,11 +28,11 @@ export const httpPost = (endPoint, body) => {
     });
 };
 
-export const httpPut = (endPoint, body) => {
-
+export const httpPut = (endpoint, body) => {
+    const url = prefix + endpoint;
     return new Promise((resolve, reject) => {
         axios
-            .put(endPoint, body)
+            .put(url, body)
             .then((response) => {
                 resolve(response);
             })

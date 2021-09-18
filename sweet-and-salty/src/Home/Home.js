@@ -26,7 +26,8 @@ const useStyles = makeStyles(() => ({
           fontSize: "500%",
           fontFamily: "serif",
           marginBottom: "20px"
-      }
+      },
+
 }));
 
 export default function Home() {
