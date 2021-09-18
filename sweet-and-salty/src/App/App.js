@@ -1,4 +1,3 @@
-import './App.css';
 import { Flowchart } from '../Flowchart/Flowchart';
 import {
   BrowserRouter as Router,
