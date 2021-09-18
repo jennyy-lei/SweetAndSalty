@@ -9,6 +9,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import { makeStyles } from "@material-ui/core/styles";
+import { httpPost } from "../Endpoints/endpoints"
 
 const useStyles = makeStyles(() => ({
     buttonContainer: {
@@ -29,11 +30,11 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export default function CustomizeModal({open, handleClose, handleSubmit }) {
+export default function CustomizeModal({open, handleCancel, handleClose }) {
     const classes = useStyles();
 
     const [ingredients, setIngredients] = useState("");
-    const [timeLimit, setTimeLimit] = useState("");
+    const [timeLimit, setTimeLimit] = useState(0);
 
     const handleIngredientInputChange = (event) => {
         const inputIngredients = event.target.value;
@@ -45,6 +46,12 @@ export default function CustomizeModal({open, handleClose, handleSubmit }) {
         setTimeLimit(event.target.value);
         console.log(timeLimit);
     };
+
+    const handleSubmit = () => {
+        httpPost("/init", { data: ingredients, time: timeLimit });
+        handleClose();
+    };
+
 
     return (
         <Dialog open={open} onClose={handleClose}>
@@ -58,13 +65,13 @@ export default function CustomizeModal({open, handleClose, handleSubmit }) {
             />
             <FormLabel className={classes.content} component="legend">Cooking Time Range</FormLabel>
             <RadioGroup className={classes.content} row aria-label="gender" name="row-radio-buttons-group" onChange={handleTimeRangeChange}>
-                <FormControlLabel value={"0-10"} control={<Radio />} label="0-10 Min" />
-                <FormControlLabel value={"10-30"} control={<Radio />} label="10-30 Min" />
-                <FormControlLabel value={"30-60"} control={<Radio />} label="30-60 Min" />
-                <FormControlLabel value={"60+"} control={<Radio />} label="60+ Min"/>
+                <FormControlLabel value={1} control={<Radio />} label="0-10 Min" />
+                <FormControlLabel value={2} control={<Radio />} label="10-30 Min" />
+                <FormControlLabel value={3} control={<Radio />} label="30-60 Min" />
+                <FormControlLabel value={4} control={<Radio />} label="60+ Min"/>
             </RadioGroup>
             <DialogActions className={classes.buttonContainer}>
-                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleCancel}>Cancel</Button>
                 <Button onClick={handleSubmit} color="primary" className={classes.submitButton}>
                     Go
                 </Button>

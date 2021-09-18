@@ -19,15 +19,13 @@ export default function RecipeFinder() {
         true
     );
 
-    const onModalSubmit = () => {
-        // Send info to backend
-        setModalOpen(false);
-    };
-
     const onModalCancel = () => {
         setModalOpen(false);
         history.push('/');
-        
+    }
+
+    const onModalClose = () => {
+        setModalOpen(false);
     }
     
     return (
@@ -35,8 +33,8 @@ export default function RecipeFinder() {
             <Flowchart />
             <CustomizeModal
                 open={modalOpen}
-                handleClose={onModalCancel}
-                handleSubmit={onModalSubmit}
+                handleCancel={onModalCancel}
+                handleClose={onModalClose}
                  />
         </div>
         
