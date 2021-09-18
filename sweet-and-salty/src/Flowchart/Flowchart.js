@@ -10,13 +10,11 @@ export class Flowchart extends React.Component {
     this.selectedIngredients = [];
     this.nextIngredients = ["Tomato", "Potato"];
     this.id = 0;
-    this.nodeCount = 1;
     this.wrapper = React.createRef();
     this.state = { elements: [], height: 0 }
   }
 
   componentDidMount() {
-    let w = this.wrapper.current.clientWidth;
     let h = this.wrapper.current.clientHeight;
     this.setState({
       height: h,
@@ -30,14 +28,13 @@ export class Flowchart extends React.Component {
     let itemSize = 200, spacing = 100, padding = 100;
     let n = [];
 
-    if (values.length == 0) {
+    if (values.length === 0) {
       n.push({
         id: this.id++,
         data: { text: "Keep selecting ingredients on the right while we narrow down the recipes for you!" },
         type: "text",
         position: { x: w - itemSize - padding - spacing, y: h/2 - 20 }
       });
-      console.log(n);
     } else {
       for (let i in values) {
         let iint = parseInt(i);
@@ -82,7 +79,15 @@ export class Flowchart extends React.Component {
   }
 
   calcListHeight(n) {
-    return n*40 + (n-1)*40
+    return n*40 + (n-1)*40;
+  }
+
+  calcExtent() {
+    let n = this.selectedIngredients.length;
+    let w = this.wrapper.current?.clientWidth || 0;
+    let calcw = ((n+1)*200 + (n+2)*100);
+    if (w - calcw < 0) return w - calcw;
+    else return 0;
   }
 
   render() {
@@ -95,12 +100,21 @@ export class Flowchart extends React.Component {
             panOnScroll="true"
             panOnScrollMode="horizontal"
             panOnScrollSpeed="1.25"
-            zoomOnScroll="false" >
+            zoomOnScroll="false"
+            translateExtent={[[this.calcExtent(), -Infinity], [this.wrapper.current?.clientWidth || 0, Infinity]]} >
             <MiniMap
+              className="miniMap"
+              nodeBorderRadius={15}
+              nodeStrokeColor={(node) => {
+                switch (node.type) {
+                  case 'text': return 'transparent';
+                  default: return 'gray';
+                }
+              }}
               nodeColor={(node) => {
                 switch (node.type) {
-                  case 'input':
-                    return 'red';
+                  case 'text':
+                    return 'transparent';
                   case 'default':
                     return '#00ff00';
                   case 'output':
