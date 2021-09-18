@@ -1,4 +1,5 @@
 import { Flowchart } from '../Flowchart/Flowchart';
+import { Home } from '../Home/Home';
 import {
   BrowserRouter as Router,
   Switch,
@@ -24,6 +25,9 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+          <Route path="/">
+            <Home/>
+          </Route>
           <Route path="/flow">
             <Flowchart />
           </Route>
