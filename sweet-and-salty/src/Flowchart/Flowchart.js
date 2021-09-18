@@ -1,25 +1,107 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Flowchart.css";
-import ReactFlow, { MiniMap, ReactFlowProvider } from 'react-flow-renderer';
+import ReactFlow, { MiniMap, ReactFlowProvider, useStoreState } from 'react-flow-renderer';
 import { nodeTypes } from "./Item/Item";
 
-export class Flowchart extends React.Component {
+export function Flowchart() {
+
+  // let height = this.wrapper.current?.clientHeight;
+  // let width = this.wrapper.current?.clientHeight;
+
+  let calculatedWidth = 0;
+  function setCalculatedWidth(calcW, screenW) {
+    console.log("Wrapper", calculatedWidth, calcW);
+    if (calculatedWidth !== calcW) listener(calcW, screenW);
+    calculatedWidth = calcW;
+  }
+  let listener = (x, y) => {}
+  function addListener(x) { listener = x }
+
+  return (
+    <ReactFlowProvider>
+      <Flow setCalculatedWidth={setCalculatedWidth} />
+      <Scroll addListener={addListener} />
+    </ReactFlowProvider>
+  );
+}
+
+function Scroll(props) {
+  const bar = useRef(null);
+  const transform = useStoreState((store) => store.transform);
+  // const { setCenter } = useZoomPanHelper();
+
+  const [barWidth, setBarWidth] = useState(100);
+  const [barRight, setBarRight] = useState(0);
+  const [width, setWidth] = useState({cw: 0, w: 0});
+
+  // let mouseDown = false;
+  // let startPos;
+
+  useEffect(() => {
+    if (width.cw - width.w > 0) setBarRight(transform[0] / (width.cw - width.w) * (100 - barWidth));
+    else setBarRight(0);
+  }, [transform[0]]);
+
+  // setCenter(x, y, 1);
+
+  props.addListener(function (calcW, screenW) {
+    setWidth({cw: calcW, w: screenW})
+    setBarWidth(screenW / calcW * 100);
+  })
+
+  // bar.current?.addEventListener("mousedown", (ev) => {
+  //   if (!mouseDown) startPos = ev.screenX;
+  //   mouseDown = true
+  // })
+  // bar.current?.addEventListener("mouseup", () => { mouseDown = false })
+  // bar.current?.addEventListener("mousemove", (ev) => {
+  //   if (mouseDown) {
+  //     let leftDist = (100 - barRight - barWidth) / 100 * width.w;
+  //     let rightDist = barRight / 100 * width.w;
+  //     let dx = ev.screenX - startPos;
+  //     if (dx < 0 && -dx < leftDist) {
+  //       setBarRight((rightDist - dx) / width.w * 100);
+  //     }
+  //   }
+  // })
+
+  return (
+    <div className="scroll-wrapper">
+      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%"}}></div>
+    </div>
+  )
+}
+
+class Flow extends React.Component {
   constructor(props) {
     super(props);
 
+    this.calcW = 0;
     this.selectedIngredients = [];
     this.nextIngredients = ["Tomato", "Potato"];
     this.id = 0;
     this.wrapper = React.createRef();
-    this.state = { elements: [], height: 0 }
+    this.state = { elements: [] }
   }
 
   componentDidMount() {
-    let h = this.wrapper.current.clientHeight;
+    let h = this.wrapper.current?.clientHeight || 0;
     this.setState({
       height: h,
       elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
     })
+
+    window.addEventListener("resize", this.resize.bind(this));
+  }
+
+  componentDidUpdate() {
+    console.log("Flow", this.calcW, this.wrapper.current?.clientWidth || 0);
+    this.props.setCalculatedWidth(this.calcW, this.wrapper.current?.clientWidth || 0);
+  }
+
+  resize() {
+      console.log("jgkjg");
+      this.makeNodes(this.selectedIngredients, this.nextIngredients);
   }
 
   makeNodes(values, futureValues) {
@@ -85,48 +167,50 @@ export class Flowchart extends React.Component {
   calcExtent() {
     let n = this.selectedIngredients.length;
     let w = this.wrapper.current?.clientWidth || 0;
-    let calcw = ((n+1)*200 + (n+2)*100);
-    if (w - calcw < 0) return w - calcw;
-    else return 0;
+    this.calcW = ((n+1)*200 + (n+2)*100);
+    if (w - this.calcW < 0) {
+      return w - this.calcW;
+    } else {
+      this.calcW = w;
+      return 0;
+    }
   }
 
   render() {
     return (
       <div className="flowWrapper" ref={this.wrapper}>
-        <ReactFlowProvider>
-          <ReactFlow
-            elements={this.state.elements}
-            nodeTypes={nodeTypes}
-            panOnScroll="true"
-            panOnScrollMode="horizontal"
-            panOnScrollSpeed="1.25"
-            zoomOnScroll="false"
-            translateExtent={[[this.calcExtent(), -Infinity], [this.wrapper.current?.clientWidth || 0, Infinity]]} >
-            <MiniMap
-              className="miniMap"
-              nodeBorderRadius={15}
-              nodeStrokeColor={(node) => {
-                switch (node.type) {
-                  case 'text': return 'transparent';
-                  default: return 'gray';
-                }
-              }}
-              nodeColor={(node) => {
-                switch (node.type) {
-                  case 'text':
-                    return 'transparent';
-                  case 'default':
-                    return '#00ff00';
-                  case 'output':
-                    return 'rgb(0,0,255)';
-                  default:
-                    return '#eee';
-                }
-              }}
-              nodeStrokeWidth={3}
-            />
-          </ReactFlow>
-        </ReactFlowProvider>      
+        <ReactFlow
+          elements={this.state.elements}
+          nodeTypes={nodeTypes}
+          panOnScroll="true"
+          panOnScrollMode="horizontal"
+          panOnScrollSpeed="1.25"
+          zoomOnScroll="false"
+          translateExtent={[[this.calcExtent(), -Infinity], [this.wrapper.current?.clientWidth || 0, Infinity]]} >
+          <MiniMap
+            className="miniMap"
+            nodeBorderRadius={15}
+            nodeStrokeColor={(node) => {
+              switch (node.type) {
+                case 'text': return 'transparent';
+                default: return 'gray';
+              }
+            }}
+            nodeColor={(node) => {
+              switch (node.type) {
+                case 'text':
+                  return 'transparent';
+                case 'default':
+                  return '#00ff00';
+                case 'output':
+                  return 'rgb(0,0,255)';
+                default:
+                  return '#eee';
+              }
+            }}
+            nodeStrokeWidth={3}
+          />
+        </ReactFlow>
       </div>
     );
   }

@@ -1,12 +1,17 @@
 from flask import Flask, jsonify, request
-from models import Recipes,Ingredients,IngredientsToReceipes
+from .models import Recipes,Ingredients,IngredientsToReceipes
+from sqlalchemy import create_engine # used to make a handle to the db
+from sqlalchemy.orm import session, sessionmaker
 import json
 
+#TODO: engine = create_engine('cockroachdbbb thingy:///:memory:', echo=True)
 app = Flask(__name__)
+Session = sessionmaker() #TODO: add bind=engine when it is availabel
 
 selected_ingredient = []
 time_choice = None
 matched_recipes = [] # contain the recipes we already matched and sent to front, filter these
+shuffle_counter = 0;
 @app.route('/init', methods=['POST'])
 def post_initial_params():
     data = json.loads(request.get_json())
@@ -17,6 +22,8 @@ def post_initial_params():
 
 @app.route('/ingre', methods=['GET'])
 def get_recom_ingre():
+    session = Session()
+
     #TODO: querry the database for 5 ingredients that matches our criteria
     sample_data = {
         "ingre1": "Banana",
@@ -25,6 +32,7 @@ def get_recom_ingre():
         "ingre4": "chicken",
         "ingre5": "water"
     }
+    shuffle_counter +=1
     return jsonify(sample_data)
 
 @app.route('/ingre', methods=['PUT'])
@@ -52,4 +60,5 @@ def get_matched_recipes():
             "image": "https://cdn.sallysbakingaddiction.com/wp-content/uploads/2016/07/Banana-Cream-Pie-8.jpg"
         },
     }
+    shuffle_counter = 0;
     return jsonify(sample_data)
