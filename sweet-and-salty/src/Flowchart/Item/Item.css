@@ -1,0 +1,59 @@
+.rfr-text-item {
+  color: rgb(146, 148, 156);
+  height: 40px;
+  transform: translateX(-100%);
+  font-size: 1.25rem;
+}
+
+.rfr-item {
+  width: 200px;
+  border-radius: 5px;
+  box-shadow: 0 2px 2px 0 #eee2dc;
+  background-color: white;
+  color: #ff6c10;
+  /* border: 1px solid #ff6c10; */
+  /* white-space: nowrap; */
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 40px;
+  cursor: default;
+}
+
+.rfr-item-id {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* border-right: 1px solid #ff6c10; */
+  height: 100%;
+  width: 40px;
+  background-color: #ffebdf;
+  border-radius: 5px 0 0 5px;
+}
+
+.rfr-item-text {
+  padding: 0 10px;
+}
+
+.rfr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  cursor: default;
+}
+
+.rfr-list-item {
+  opacity: 0.5;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.rfr-list-item:hover {
+  opacity: 1;
+}
+
+.rfr-handle {
+  background-color: #ff6c10;
+  border-radius: 999px;
+}
