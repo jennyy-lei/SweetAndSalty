@@ -6,7 +6,7 @@ import psycopg2
 
 app = Flask(__name__)
 CORS(app)
-selected_ingredient = ['banana','flour']
+selected_ingredient = []
 time_choice = None
 shuffle_counter = 0
 conn = psycopg2.connect(conn_string)
@@ -16,7 +16,10 @@ def post_initial_params():
     # set the vars to global
     global selected_ingredient
     global time_choice
-    
+
+    # hard reset if page is refreshed
+    selected_ingredient = []
+    time_choice = None
     # get req json
     req_json = request.get_json()
 
