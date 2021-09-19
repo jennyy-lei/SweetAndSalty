@@ -54,7 +54,6 @@ export default function CustomizeModal({open, handleCancel, handleClose, submit}
             console.log("done post");
         }).bind(this));
         // httpPost("/init", { data: ingredients, time: timeLimit });
-        setTimeout(() => { httpGet("/ingre"); }, 2000); //! make sure to finish one request before another
         
         handleClose();
         submit(timeLimit, ingredients);

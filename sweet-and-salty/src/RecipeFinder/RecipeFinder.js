@@ -100,7 +100,7 @@ export default function RecipeFinder() {
             </div>
             <div className={classes.flow}>
                 <Flowchart 
-                    newRecommendedRecipes={newRecommendedRecipes} />
+                    modalOpen={modalOpen} newRecommendedRecipes={newRecommendedRecipes} />
             </div>
             <div style={{flex: 3, background: "#fafafa"}}>
                 <RecipeDisplay 

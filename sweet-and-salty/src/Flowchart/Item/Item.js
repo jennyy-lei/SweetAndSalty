@@ -26,7 +26,7 @@ const CustomNodeComponent = ({ data }) => {
 const CustomListComponent = ({ data }) => {
   return (
     <div className="rfr-list">
-      {data.options.length == 0 ? <div className="empty">No more possible ingredient combinations!</div> : data.options.map(item => (
+      {data.options.length === 0 ? <div className="empty">No more possible ingredient combinations!</div> : data.options.map(item => (
         <div key={k++} onClick={ () => { data.onSelect(item) } } className="rfr-item rfr-list-item">
           <div className="rfr-item-text">{item}</div>
         </div>

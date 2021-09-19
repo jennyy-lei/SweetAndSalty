@@ -155,8 +155,10 @@ def get_completed_recipes_info(conn, ingredients):
 
 
 def get_recommended_ingredients(conn, ingredients, shuffle_counter):
+    initial = ["milk", "rice", "eggs", "tomatoes", "chicken", "flour", "salt", "ham", "beef", "beans", "butter", "onion", "peas", "cheese"]
+    random.shuffle(initial)
     if not ingredients:
-        return ["milk", "rice", "eggs", "tomatoes", "chicken"]
+        return initial[:5]
 
     iids = get_iids_by_inames(conn, ingredients)
     viable_rids = get_viable_recipes_rids(conn, iids)
