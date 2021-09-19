@@ -61,6 +61,7 @@ class Flow extends React.Component {
 
     this.calcW = 0;
     this.selectedIngredients = [];
+    this.nextIngredients = [];
     httpGet("/ingre").then(((data) => {
       this.nextIngredients = data.data.data;
       this.setState({

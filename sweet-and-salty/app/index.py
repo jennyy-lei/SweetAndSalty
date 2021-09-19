@@ -7,6 +7,7 @@ import psycopg2
 app = Flask(__name__)
 CORS(app)
 selected_ingredient = []
+matched_recipes = []
 time_choice = None
 shuffle_counter = 0
 conn = psycopg2.connect(conn_string)
@@ -16,10 +17,11 @@ def post_initial_params():
     # set the vars to global
     global selected_ingredient
     global time_choice
-
+    global matched_recipes
     # hard reset if page is refreshed
     selected_ingredient = []
     time_choice = None
+    matched_recipes = {"size":0,"data":[]}
     # get req json
     req_json = request.get_json()
 
@@ -31,7 +33,6 @@ def post_initial_params():
 
     # only modify if not [""]
     if len(raw_text) != 0:
-        global selected_ingredient
         selected_ingredient = raw_text.split(',') #remove spaces, lowercase force and split via comma
     return "", 204
 
@@ -61,18 +62,22 @@ def put_selected_ingre():
 
 @app.route('/recipe', methods=['GET'])
 def get_matched_recipes():
+    print("selected are:")
+    print(selected_ingredient)
+    print("matched size is:")
+    print(matched_recipes["size"])
     global shuffle_counter
     # get matched recipes from db with the fields and params as indicated below
     completed_recipes_info = get_completed_recipes_info(conn, selected_ingredient)
 
-    data = {"size": len(completed_recipes_info), "data": []}
+    matched_recipes["size"] += len(completed_recipes_info)
     for recipe_info in completed_recipes_info:
         recipe_data = {
             "name": recipe_info[1],
             "time": recipe_info[2],
             "link": recipe_info[3]
         }
-        data["data"].append(recipe_data)
+        matched_recipes["data"].append(recipe_data)
 
     shuffle_counter = 0;
-    return jsonify(data)
+    return jsonify(matched_recipes)
