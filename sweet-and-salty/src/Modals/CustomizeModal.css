@@ -1,0 +1,41 @@
+.MuiRadio-colorPrimary.Mui-checked, .MuiRadio-colorPrimary.Mui-checked + span {
+  color: #ff6c10 !important;
+}
+
+.MuiFormControl-root {
+  padding-bottom: 1.5rem !important;
+}
+
+.text {
+  padding: 8px 24px !important;
+  font-size: 15px !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.MuiInput-underline:after {
+  border-bottom-color: #ff6c10 !important;
+}
+
+.MuiTypography-root {
+  color: rgba(0, 0, 0, 0.7) !important;
+  white-space: nowrap;
+}
+
+.MuiFormGroup-row {
+  flex-wrap: nowrap !important;
+}
+
+.radio {
+  font-size: 1rem;
+  color: "#ff6c10";
+}
+
+.MuiDialog-paper {
+  padding: 30px !important;
+  /* color: white; */
+}
+
+.makeStyles-submitButton-3:hover {
+    background-color: #ff6c10 !important;
+    color: #ffffff !important;
+}

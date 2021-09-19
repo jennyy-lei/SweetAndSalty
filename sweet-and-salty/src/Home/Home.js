@@ -1,7 +1,8 @@
 import Background from '../img/background_image.jpg';
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import Button from '@mui/material/Button';
 import { useHistory } from "react-router-dom";
+import "./Home.css"
 
 const useStyles = makeStyles(() => ({
     sectionStyle: {
@@ -25,9 +26,9 @@ const useStyles = makeStyles(() => ({
       main: {
           fontSize: "500%",
           fontFamily: "serif",
-          marginBottom: "20px"
+          marginBottom: "20px",
+          fontFamily: 'Nothing You Could Do, cursive',
       },
-
 }));
 
 export default function Home() {
@@ -41,8 +42,8 @@ export default function Home() {
     return (
         <section className={classes.sectionStyle} >
             <div className={classes.title}>
-                <h1 className={classes.main}>Sweet & Salty</h1>
-                <Button variant="outlined" onClick={handleGetStartedClick} color="warning">Get Started</Button>
+                <h1 className={classes.main}>Sweet &amp; Salty</h1>
+                <Button variant="outlined" onClick={handleGetStartedClick} color="primary">Get Started</Button>
             </div>
         </section>
     );

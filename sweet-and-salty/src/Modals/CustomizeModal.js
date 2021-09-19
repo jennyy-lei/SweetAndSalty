@@ -10,6 +10,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import { makeStyles } from "@material-ui/core/styles";
 import { httpPost,httpGet } from "../Endpoints/endpoints"
+import "./CustomizeModal.css";
+import { DialogTitle } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
     buttonContainer: {
@@ -17,16 +19,18 @@ const useStyles = makeStyles(() => ({
         justifyContent: "space-between",
         marginLeft: "15px",
         marginRight: "15px",
-        marginBottom: "10px"
+        marginBottom: "10px",
     },
     submitButton: {
-        backgroundColor: "#F52000",
-        color: "#ffffff",
+        backgroundColor: "#ffebdf !important",
+        color: "#ff6c10",
     },
     content: {
         marginLeft: "25px",
         paddingBlockEnd: "10px",
-        width: "470px"
+        width: "470px",
+        flexWrap: "nowrap",
+        gap: "0.5rem"
     }
 }));
 
@@ -34,7 +38,7 @@ export default function CustomizeModal({open, handleCancel, handleClose }) {
     const classes = useStyles();
 
     const [ingredients, setIngredients] = useState("");
-    const [timeLimit, setTimeLimit] = useState(0);
+    const [timeLimit, setTimeLimit] = useState(1);
 
     const handleIngredientInputChange = (event) => {
         const inputIngredients = event.target.value;
@@ -54,10 +58,12 @@ export default function CustomizeModal({open, handleCancel, handleClose }) {
         handleClose();
     };
 
-
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogContent>
+        <Dialog open={open}>
+            <DialogTitle>
+                Initial Input
+            </DialogTitle>
+            <DialogContent className="text">
                 Enter any ingredients you have, as well as your desired cooking time.
             </DialogContent>
             <TextField
@@ -65,15 +71,15 @@ export default function CustomizeModal({open, handleCancel, handleClose }) {
                 onChange={handleIngredientInputChange}
                 helperText="Enter a comma seperated list"
             />
-            <FormLabel className={classes.content} component="legend">Cooking Time Range</FormLabel>
-            <RadioGroup className={classes.content} row aria-label="gender" name="row-radio-buttons-group" onChange={handleTimeRangeChange}>
-                <FormControlLabel value={1} control={<Radio />} label="0-10 Min" />
-                <FormControlLabel value={2} control={<Radio />} label="10-30 Min" />
-                <FormControlLabel value={3} control={<Radio />} label="30-60 Min" />
-                <FormControlLabel value={4} control={<Radio />} label="60+ Min"/>
+            <FormLabel className={classes.content, "text"} component="legend">Cooking Time Range</FormLabel>
+            <RadioGroup className={classes.content} row name="row-radio-buttons-group" onChange={handleTimeRangeChange}>
+                <FormControlLabel checked={timeLimit==1} className="radio" value={1} control={<Radio />} label="0-10 Min" />
+                <FormControlLabel checked={timeLimit==2} className="radio" value={2} control={<Radio />} label="10-30 Min" />
+                <FormControlLabel checked={timeLimit==3} className="radio" value={3} control={<Radio />} label="30-60 Min" />
+                <FormControlLabel checked={timeLimit==4} className="radio" value={4} control={<Radio />} label="60+ Min"/>
             </RadioGroup>
             <DialogActions className={classes.buttonContainer}>
-                <Button onClick={handleCancel}>Cancel</Button>
+                <Button onClick={handleCancel}>Back</Button>
                 <Button onClick={handleSubmit} color="primary" className={classes.submitButton}>
                     Go
                 </Button>

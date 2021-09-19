@@ -107,7 +107,7 @@ class Flow extends React.Component {
   makeNodes(values, futureValues) {
     let w = this.wrapper.current?.clientWidth || 0;
     let h = this.wrapper.current?.clientHeight || 0;
-    let itemSize = 200, spacing = 100, padding = 100;
+    let itemSize = 200, spacing = 75, padding = 100;
     let n = [];
 
     if (values.length === 0) {
@@ -167,7 +167,7 @@ class Flow extends React.Component {
   calcExtent() {
     let n = this.selectedIngredients.length;
     let w = this.wrapper.current?.clientWidth || 0;
-    this.calcW = ((n+1)*200 + (n+2)*100);
+    this.calcW = ((n+1)*200 + (n)*75 + 2*100);
     if (w - this.calcW < 0) {
       return w - this.calcW;
     } else {
