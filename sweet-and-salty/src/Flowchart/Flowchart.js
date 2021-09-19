@@ -61,7 +61,13 @@ class Flow extends React.Component {
 
     this.calcW = 0;
     this.selectedIngredients = [];
-    this.nextIngredients = ["Tomato", "Potato", "Play Doh", "Sago", "Avocado"];
+    httpGet("/ingre").then(((data) => {
+      this.nextIngredients = data.data.data;
+      this.setState({
+        elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
+      })
+    }).bind(this));
+    // this.nextIngredients = ["Tomato", "Potato", "Play Doh", "Sago", "Avocado"];
     this.id = 0;
     this.wrapper = React.createRef();
     this.state = { elements: [] }
