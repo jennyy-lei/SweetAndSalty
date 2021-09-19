@@ -1,15 +1,13 @@
 from flask import Flask, jsonify, request
-from .models import Recipes,Ingredients,IngredientsToReceipes
-from ..db import conn_string, get_completed_recipes_info, get_recommended_ingredients
+from db import conn_string, get_completed_recipes_info, get_recommended_ingredients
 from flask_cors import CORS
 import json
 import psycopg2
 
 app = Flask(__name__)
 CORS(app)
-selected_ingredient = []
+selected_ingredient = ['banana','flour']
 time_choice = None
-matched_recipes = [] # contain the recipes we already matched and sent to front, filter these
 shuffle_counter = 0
 conn = psycopg2.connect(conn_string)
 
@@ -52,10 +50,9 @@ def get_recom_ingre():
 @app.route('/ingre', methods=['PUT'])
 def put_selected_ingre():
     global selected_ingredient
-    data = json.loads(request.get_json())
+    data = json.loads(str(request.get_json()).replace("'",'"'))
     new_selected_ingre = data["ingre"]
     selected_ingredient.append(new_selected_ingre)
-
     return "", 204
     # routes as stated in doc
 
