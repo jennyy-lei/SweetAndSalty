@@ -1,0 +1,9 @@
+.MuiButton-outlinedPrimary {
+  color: #ff6c10 !important;
+  border-color: #ff6c10 !important;
+  transition: 0.1s;
+}
+
+.MuiButton-outlinedPrimary:hover {
+  background-color: #ffebdf !important;
+}
