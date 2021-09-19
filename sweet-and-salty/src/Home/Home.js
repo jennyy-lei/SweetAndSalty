@@ -1,5 +1,5 @@
 import Background from '../img/background_image.jpg';
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from '@mui/material/Button';
 import { useHistory } from "react-router-dom";
 import "./Home.css"
@@ -25,7 +25,6 @@ const useStyles = makeStyles(() => ({
       },
       main: {
           fontSize: "500%",
-          fontFamily: "serif",
           marginBottom: "20px",
           fontFamily: 'Nothing You Could Do, cursive',
       },

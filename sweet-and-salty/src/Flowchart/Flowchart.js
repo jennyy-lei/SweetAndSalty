@@ -5,13 +5,12 @@ import { nodeTypes } from "./Item/Item";
 import { httpGet, httpPut } from "../Endpoints/endpoints";
 
 export function Flowchart({newRecommendedRecipes}) {
-
   // let height = this.wrapper.current?.clientHeight;
   // let width = this.wrapper.current?.clientHeight;
+  const [scroll, setScroll] = useState(0);
 
   let calculatedWidth = 0;
   function setCalculatedWidth(calcW, screenW) {
-    console.log("Wrapper", calculatedWidth, calcW);
     if (calculatedWidth !== calcW) listener(calcW, screenW);
     calculatedWidth = calcW;
   }
@@ -20,9 +19,10 @@ export function Flowchart({newRecommendedRecipes}) {
 
   return (
     <div style={{height: "100%", position: "relative"}}>
+      <div className="bg" style={{right: 40 - scroll}}></div>
       <ReactFlowProvider>
         <Flow setCalculatedWidth={setCalculatedWidth} newRecommendedRecipes={newRecommendedRecipes}/>
-        <Scroll addListener={addListener} />
+        <Scroll addListener={addListener} setScroll={setScroll} />
       </ReactFlowProvider>
     </div>
   );
@@ -31,46 +31,26 @@ export function Flowchart({newRecommendedRecipes}) {
 function Scroll(props) {
   const bar = useRef(null);
   const transform = useStoreState((store) => store.transform);
-  // const { setCenter } = useZoomPanHelper();
 
   const [barWidth, setBarWidth] = useState(100);
   const [barRight, setBarRight] = useState(0);
   const [width, setWidth] = useState({cw: 0, w: 0});
 
-  // let mouseDown = false;
-  // let startPos;
-
   useEffect(() => {
+    props.setScroll(transform[0]);
     if (width.cw - width.w > 0) setBarRight(transform[0] / (width.cw - width.w) * (100 - barWidth));
     else setBarRight(0);
   }, [transform[0]]);
 
-  // setCenter(x, y, 1);
 
   props.addListener(function (calcW, screenW) {
     setWidth({cw: calcW, w: screenW})
     setBarWidth(screenW / calcW * 100);
   })
 
-  // bar.current?.addEventListener("mousedown", (ev) => {
-  //   if (!mouseDown) startPos = ev.screenX;
-  //   mouseDown = true
-  // })
-  // bar.current?.addEventListener("mouseup", () => { mouseDown = false })
-  // bar.current?.addEventListener("mousemove", (ev) => {
-  //   if (mouseDown) {
-  //     let leftDist = (100 - barRight - barWidth) / 100 * width.w;
-  //     let rightDist = barRight / 100 * width.w;
-  //     let dx = ev.screenX - startPos;
-  //     if (dx < 0 && -dx < leftDist) {
-  //       setBarRight((rightDist - dx) / width.w * 100);
-  //     }
-  //   }
-  // })
-
   return (
     <div className="scroll-wrapper">
-      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%", opacity: barWidth == 100 ? 0 : 1}}></div>
+      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%", opacity: barWidth === 100 ? 0 : 1}}></div>
     </div>
   )
 }
@@ -98,12 +78,10 @@ class Flow extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("Flow", this.calcW, this.wrapper.current?.clientWidth || 0);
     this.props.setCalculatedWidth(this.calcW, this.wrapper.current?.clientWidth || 0);
   }
 
   resize() {
-      console.log("jgkjg");
       this.makeNodes(this.selectedIngredients, this.nextIngredients);
   }
 
@@ -159,7 +137,6 @@ class Flow extends React.Component {
 
   onSelect(option) {
     this.selectedIngredients.push(option);
-    console.log(option);
     httpPut("/ingre", { ingre : option });
     let nextIngredientOptions = httpGet("/ingre").data;
     let recommendedRecipes = httpGet("/recipe").data;
@@ -190,7 +167,6 @@ class Flow extends React.Component {
   render() {
     return (
       <div className="flowWrapper" ref={this.wrapper}>
-        <div className="bg"></div>
         <ReactFlow
           elements={this.state.elements}
           nodeTypes={nodeTypes}
@@ -198,6 +174,8 @@ class Flow extends React.Component {
           panOnScrollMode="horizontal"
           panOnScrollSpeed="1.25"
           zoomOnScroll="false"
+          zoomOnPinch="false"
+          zoomOnDoubleClick="false"
           translateExtent={[[this.calcExtent(), -Infinity], [this.wrapper.current?.clientWidth || 0, Infinity]]} >
         </ReactFlow>
       </div>

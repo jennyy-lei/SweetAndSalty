@@ -50,12 +50,10 @@ export default function RecipeFinder() {
     }
 
     const onSubmit = (time, ing) => {
-        console.log(ing, time)
         setResults({ time: time, ing: ing });
     }
 
     const toTime = (i) => {
-        console.log("timeee", i)
         switch (parseInt(i)) {
             case 1: return "10-15 min";
             case 2: return "15-30 min";
