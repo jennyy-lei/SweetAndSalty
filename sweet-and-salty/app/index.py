@@ -8,14 +8,17 @@ app = Flask(__name__)
 CORS(app)
 selected_ingredient = []
 matched_recipes = {"size":0,"data":[]}
-time_choice = None
+time_lower = 0
+time_upper = 1000
 shuffle_counter = 0
 skip = False
 conn = psycopg2.connect(conn_string)
 # querries and updates the local matched recipes with some selected ingredient given. used to optimize search given some input ingre
 def q_receipes(selected_in):
     global matched_recipes
-    completed_recipes_info = get_completed_recipes_info(conn, selected_in)
+    global time_lower
+    global time_upper
+    completed_recipes_info = get_completed_recipes_info(conn, selected_in,time_lower,time_upper)
     matched_recipes["size"] += len(completed_recipes_info)
     for recipe_info in completed_recipes_info:
         recipe_data = {
@@ -29,19 +32,30 @@ def q_receipes(selected_in):
 def post_initial_params():
     # set the vars to global
     global selected_ingredient
-    global time_choice
     global matched_recipes
+    global time_lower
+    global time_upper
     global skip
+    time_lower = 0
+    time_upper = 1000
     # hard reset if page is refreshed
     selected_ingredient = []
-    time_choice = None
     matched_recipes = {"size":0,"data":[]}
     # get req json
     req_json = request.get_json()
     #load json to object
     data = json.loads(str(req_json).replace("'",'"'))
     raw_text = data["data"]
+
     time_choice = data["time"]
+    if time_choice == 1:
+        time_upper = 10
+    elif time_choice == 2:
+        time_lower = 10
+        time_upper = 30
+    elif time_choice == 3:
+        time_lower = 30
+        time_upper = 60
     raw_text = raw_text.lower()
 
     # only modify if not [""]
@@ -52,6 +66,7 @@ def post_initial_params():
             selected_ingredient.append(ingre)
             q_receipes(list(set(selected_ingredient)))
     selected_ingredient = list(set(selected_ingredient))
+    matched_recipes["data"].sort(key=lambda x: x["time"], reverse=True)
     skip = True
     return "", 204
 
@@ -81,15 +96,14 @@ def put_selected_ingre():
 
 @app.route('/recipe', methods=['GET'])
 def get_matched_recipes():
-    print("selected are:")
-    print(selected_ingredient)
     global matched_recipes
     global shuffle_counter
     global skip
+    global time_lower
+    global time_upper
     # get matched recipes from db with the fields and params as indicated below
-    print(skip)
     if not skip:
-        completed_recipes_info = get_completed_recipes_info(conn, selected_ingredient)
+        completed_recipes_info = get_completed_recipes_info(conn, selected_ingredient,time_lower,time_upper)
         matched_recipes["size"] += len(completed_recipes_info)
         for recipe_info in completed_recipes_info:
             recipe_data = {
@@ -101,6 +115,4 @@ def get_matched_recipes():
 
     skip = False
     shuffle_counter = 0;
-    print("matched size is:")
-    print(matched_recipes["size"])
     return jsonify(matched_recipes)
