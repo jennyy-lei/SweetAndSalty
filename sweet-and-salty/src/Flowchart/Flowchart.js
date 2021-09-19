@@ -138,8 +138,8 @@ class Flow extends React.Component {
   onSelect(option) {
     this.selectedIngredients.push(option);
     httpPut("/ingre", { ingre : option });
-    let nextIngredientOptions = Object.values(httpGet("/ingre"));
-    let recommendedRecipes = httpGet("/recipe");
+    let nextIngredientOptions = httpGet("/ingre").data;
+    let recommendedRecipes = httpGet("/recipe").data;
     this.props.newRecommendedRecipes(recommendedRecipes);
     if (Array.isArray(nextIngredientOptions)) this.nextIngredients = nextIngredientOptions;
 
