@@ -68,8 +68,8 @@ export default function RecipeFinder() {
 
     const toTime = (i) => {
         switch (parseInt(i)) {
-            case 1: return "10-15 min";
-            case 2: return "15-30 min";
+            case 1: return "0-10 min";
+            case 2: return "10-30 min";
             case 3: return "30-60 min";
             case 4: return "No Limit";
             default: return "_";
