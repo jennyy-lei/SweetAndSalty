@@ -61,7 +61,7 @@ export default function CustomizeModal({open, handleCancel, handleClose }) {
             <DialogTitle>
                 Initial Input
             </DialogTitle>
-            <DialogContent>
+            <DialogContent className="text">
                 Enter any ingredients you have, as well as your desired cooking time.
             </DialogContent>
             <TextField
@@ -69,7 +69,7 @@ export default function CustomizeModal({open, handleCancel, handleClose }) {
                 onChange={handleIngredientInputChange}
                 helperText="Enter a comma seperated list"
             />
-            <FormLabel className={classes.content} component="legend">Cooking Time Range</FormLabel>
+            <FormLabel className={classes.content, "text"} component="legend">Cooking Time Range</FormLabel>
             <RadioGroup className={classes.content} row name="row-radio-buttons-group" onChange={handleTimeRangeChange}>
                 <FormControlLabel checked={timeLimit==1} className="radio" value={1} control={<Radio />} label="0-10 Min" />
                 <FormControlLabel checked={timeLimit==2} className="radio" value={2} control={<Radio />} label="10-30 Min" />
