@@ -2,12 +2,19 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
-    metadata: {
+    link: {
+        height: "100%",
         width: "200px",
+        flexShrink: 0,
+        textDecoration: "none",
+        color: "inherit"
+    },
+    metadata: {
+        height: "100%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         borderRadius: "5px",
-        height: "100%",
         background: "#ffebdf",
         padding: "15px",
         boxSizing: "border-box",
@@ -28,14 +35,12 @@ const useStyles = makeStyles(() => ({
 export default function AssetCard({ data }) {
     const classes = useStyles();
 
-    const handleCardClick = () => {
-        window.open(data.url);
-    };
-
     return (
-        <div className={classes.metadata} onClick={handleCardClick}>
-            <div className={`${classes.recipeData} ${classes.name}`}>{data.name}</div>
-            <div className={classes.recipeData}>{"Expected Cooking Time: " + data.time + " Min"}</div>
-        </div>
+        <a href={"https://" + data.link} className={classes.link} target="_blank">
+            <div className={classes.metadata}>
+                <div className={`${classes.recipeData} ${classes.name}`}>{data.name}</div>
+                <div className={classes.recipeData}>{"Expected Cooking Time: " + data.time + " Min"}</div>
+            </div>
+        </a>
     );
 }
