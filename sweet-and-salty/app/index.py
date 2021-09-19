@@ -112,7 +112,7 @@ def get_matched_recipes():
                 "link": recipe_info[3]
             }
             matched_recipes["data"].append(recipe_data)
-
+        matched_recipes["data"].sort(key=lambda x: x["time"], reverse=True)
     skip = False
     shuffle_counter = 0;
     return jsonify(matched_recipes)
