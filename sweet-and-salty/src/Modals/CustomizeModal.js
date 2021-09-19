@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export default function CustomizeModal({open, handleCancel, handleClose }) {
+export default function CustomizeModal({open, handleCancel, handleClose, submit}) {
     const classes = useStyles();
 
     const [ingredients, setIngredients] = useState("");
@@ -56,6 +56,7 @@ export default function CustomizeModal({open, handleCancel, handleClose }) {
         setTimeout(() => {  httpGet("/ingre");}, 2000); //! make sure to finish one request before another
         
         handleClose();
+        submit(timeLimit, ingredients);
     };
 
     return (

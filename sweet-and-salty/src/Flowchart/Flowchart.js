@@ -69,7 +69,7 @@ function Scroll(props) {
 
   return (
     <div className="scroll-wrapper">
-      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%"}}></div>
+      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%", opacity: barWidth == 100 ? 0 : 1}}></div>
     </div>
   )
 }
@@ -80,7 +80,7 @@ class Flow extends React.Component {
 
     this.calcW = 0;
     this.selectedIngredients = [];
-    this.nextIngredients = ["Tomato", "Potato"];
+    this.nextIngredients = ["Tomato", "Potato", "Play Doh", "Sago", "Avocado"];
     this.id = 0;
     this.wrapper = React.createRef();
     this.state = { elements: [] }
@@ -115,7 +115,7 @@ class Flow extends React.Component {
     if (values.length === 0) {
       n.push({
         id: this.id++,
-        data: { text: "Keep selecting ingredients on the right while we narrow down the recipes for you!" },
+        data: { text: "Keep selecting ingredients on the right while we find recipes!" },
         type: "text",
         position: { x: w - itemSize - padding - spacing, y: h/2 - 20 },
         draggable: false,
@@ -192,7 +192,7 @@ class Flow extends React.Component {
           panOnScrollSpeed="1.25"
           zoomOnScroll="false"
           translateExtent={[[this.calcExtent(), -Infinity], [this.wrapper.current?.clientWidth || 0, Infinity]]} >
-          <MiniMap
+          {/* <MiniMap
             className="miniMap"
             nodeBorderRadius={15}
             nodeStrokeColor={(node) => {
@@ -214,7 +214,7 @@ class Flow extends React.Component {
               }
             }}
             nodeStrokeWidth={3}
-          />
+          /> */}
         </ReactFlow>
       </div>
     );
