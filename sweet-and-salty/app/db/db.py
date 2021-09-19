@@ -231,7 +231,7 @@ def test_retry_loop(conn):
     logging.debug("test_retry_loop(): status message: %s", cur.statusmessage)
 
 
-conn_string = "postgres://testuser:testpassword@free-tier.gcp-us-central1.cockroachlabs.cloud:26257/sweet-and-salty-3616.bank?sslmode=verify-full&sslrootcert=../../users/micha/appdata/roaming/.postgresql/root.crt"
+conn_string = "postgres://testuser:testpassword@free-tier.gcp-us-central1.cockroachlabs.cloud:26257/sweet-and-salty-3616.bank?sslmode=verify-full&sslrootcert=root.crt"
 
 def main():
     conn = psycopg2.connect(conn_string)
