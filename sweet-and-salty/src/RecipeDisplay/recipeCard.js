@@ -29,13 +29,13 @@ export default function AssetCard({ data }) {
     const classes = useStyles();
 
     const handleCardClick = () => {
-        window.open(data.recipeUrl);
+        window.open(data.url);
     };
 
     return (
         <div className={classes.metadata} onClick={handleCardClick}>
             <div className={`${classes.recipeData} ${classes.name}`}>{data.name}</div>
-            <div className={classes.recipeData}>{"Expected Cooking Time: " + data.cookingTime}</div>
+            <div className={classes.recipeData}>{"Expected Cooking Time: " + data.time + " Min"}</div>
         </div>
     );
 }
