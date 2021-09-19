@@ -28,7 +28,15 @@ const useStyles = makeStyles((theme) => ({
         padding: "3px 10px",
         borderRadius: "5px",
         backgroundColor: "#ffebdf"
-    }
+    },
+    header: {
+        marginTop: "10px",
+        marginLeft: "20px",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: "1rem"
+    },
 }));
 
 export default function RecipeFinder() {
@@ -66,14 +74,21 @@ export default function RecipeFinder() {
     const newRecommendedRecipes = (newRecommendedRecipes) => {
         setRecipeList(newRecommendedRecipes + recipeList); 
     }
+
+    const restart = () => {
+        window.location.reload();
+    }
     
     return (
         <div className={classes.wrapper}>
-            <Link to="/" className="name">
-                <div>
-                    Sweet &amp; Salty
-                </div>
-            </Link>
+            <div className={classes.header}>
+                <Link to="/" className="name">
+                    <div>
+                        Sweet &amp; Salty
+                    </div>
+                </Link>
+                <div className="restart" onClick={restart}>Restart</div>
+            </div>
 
             <div className={classes.initial}>
                 Time:&nbsp;&nbsp;<span className={classes.important}>{toTime(results?.time)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ingredients:&nbsp;&nbsp;<span className={classes.important}>{results?.ing || "_"}</span>

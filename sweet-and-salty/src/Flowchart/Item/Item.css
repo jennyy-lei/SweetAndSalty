@@ -64,3 +64,17 @@
   background-color: #ff6c10;
   border-radius: 999px;
 }
+
+.empty {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.25;
+  white-space: normal;
+  color: rgb(117, 119, 126);
+  text-align: center;
+  letter-spacing: 0.5px;
+  transform: translateY(-100%);
+}
