@@ -4,7 +4,7 @@ import ReactFlow, { ReactFlowProvider, useStoreState } from 'react-flow-renderer
 import { nodeTypes } from "./Item/Item";
 import { httpGet, httpPut } from "../Endpoints/endpoints";
 
-export function Flowchart({newRecommendedRecipes}) {
+export function Flowchart({modalOpen, newRecommendedRecipes}) {
   // let height = this.wrapper.current?.clientHeight;
   // let width = this.wrapper.current?.clientHeight;
   const [scroll, setScroll] = useState(0);
@@ -21,7 +21,7 @@ export function Flowchart({newRecommendedRecipes}) {
     <div style={{height: "100%", position: "relative"}}>
       <div className="bg" style={{right: 40 - scroll}}></div>
       <ReactFlowProvider>
-        <Flow setCalculatedWidth={setCalculatedWidth} newRecommendedRecipes={newRecommendedRecipes}/>
+        <Flow modalOpen={modalOpen} setCalculatedWidth={setCalculatedWidth} newRecommendedRecipes={newRecommendedRecipes}/>
         <Scroll addListener={addListener} setScroll={setScroll} />
       </ReactFlowProvider>
     </div>
@@ -42,7 +42,6 @@ function Scroll(props) {
     else setBarRight(0);
   }, [transform[0]]);
 
-
   props.addListener(function (calcW, screenW) {
     setWidth({cw: calcW, w: screenW})
     setBarWidth(screenW / calcW * 100);
@@ -55,6 +54,13 @@ function Scroll(props) {
   )
 }
 
+function Observer({ value, didUpdate }) {
+  useEffect(() => {
+    didUpdate(value)
+  }, [value])
+  return null // component does not render anything
+}
+
 class Flow extends React.Component {
   constructor(props) {
     super(props);
@@ -62,26 +68,20 @@ class Flow extends React.Component {
     this.calcW = 0;
     this.selectedIngredients = [];
     this.nextIngredients = [];
-    httpGet("/ingre").then(((data) => {
-      this.nextIngredients = data.data.data;
-      this.setState({
-        elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
-      })
-    }).bind(this));
-    // this.nextIngredients = ["Tomato", "Potato", "Play Doh", "Sago", "Avocado"];
     this.id = 0;
     this.wrapper = React.createRef();
     this.state = { elements: [] }
   }
 
-  componentDidMount() {
-    let h = this.wrapper.current?.clientHeight || 0;
-    this.setState({
-      height: h,
-      elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
-    })
-
-    window.addEventListener("resize", this.resize.bind(this));
+  ready() {
+    if (!this.props.modalOpen) {
+      httpGet("/ingre").then(((data) => {
+        this.nextIngredients = data.data.data;
+        this.setState({
+          elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
+        });
+      }).bind(this));
+    }
   }
 
   componentDidUpdate() {
@@ -133,7 +133,7 @@ class Flow extends React.Component {
       id: this.id++,
       data: { id: values.length + 1, options: futureValues, onSelect: this.onSelect.bind(this), refresh: this.refresh.bind(this) },
       type: "list",
-      position: {x: w - itemSize - padding, y: h/2 - this.calcListHeight(futureValues.length)/2},
+      position: {x: w - itemSize - padding, y: h/2 - this.calcListHeight()/2},
       draggable: false,
       connectable: false
     });
@@ -172,8 +172,9 @@ class Flow extends React.Component {
     }).bind(this));
   }
 
-  calcListHeight(n) {
-    return n*40 + (n-1)*40;
+  calcListHeight() {
+    let maxNumIngre = 5;
+    return maxNumIngre*40 + (maxNumIngre-1)*40;
   }
 
   calcExtent() {
@@ -191,6 +192,7 @@ class Flow extends React.Component {
   render() {
     return (
       <div className="flowWrapper" ref={this.wrapper}>
+        <Observer value={this.props.modalOpen} didUpdate={this.ready.bind(this)} />
         <ReactFlow
           elements={this.state.elements}
           nodeTypes={nodeTypes}
