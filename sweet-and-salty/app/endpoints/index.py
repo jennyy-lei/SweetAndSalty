@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from .models import Recipes,Ingredients,IngredientsToReceipes
+from ..db import conn_string, get_completed_recipes_info, get_recommended_ingredients
 from flask_cors import CORS
 import json
 import psycopg2
@@ -10,6 +11,7 @@ selected_ingredient = []
 time_choice = None
 matched_recipes = [] # contain the recipes we already matched and sent to front, filter these
 shuffle_counter = 0
+conn = psycopg2.connect(conn_string)
 
 @app.route('/init', methods=['POST'])
 def post_initial_params():
@@ -35,17 +37,16 @@ def post_initial_params():
 @app.route('/ingre', methods=['GET'])
 def get_recom_ingre():
     global shuffle_counter
-    #TODO: querry the database for 5 ingredients that matches our criteria
-    sample_data = {
-        "ingre1": "Banana",
-        "ingre2": "Egg",
-        "ingre3": "flour",
-        "ingre4": "chicken",
-        "ingre5": "water"
-    }
+    global selected_ingredient
+
+    # query db for 
+    recom_ingr = get_recommended_ingredients(conn, selected_ingredient, shuffle_counter)
+    
+    data = {"data": recom_ingr}
+
     # prepare for next time call with shuffle++
     shuffle_counter +=1
-    resp = app.make_response(jsonify(sample_data))
+    resp = app.make_response(jsonify(data))
     return resp
 
 @app.route('/ingre', methods=['PUT'])
@@ -61,19 +62,17 @@ def put_selected_ingre():
 @app.route('/recipe', methods=['GET'])
 def get_matched_recipes():
     global shuffle_counter
-    #TODO: get matched recipes from db with the fields and params as indicated below
-    sample_data = {
-        "size":2,
-        "recipe1":{
-            "name": "apple pie",
-            "time": 2,
-            "image": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fkristineskitchenblog.com%2Fmy-favorite-apple-pie%2F&psig=AOvVaw2-CnwxCjxgI_SGveFaWdSy&ust=1632082511546000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCLjHxqSrifMCFQAAAAAdAAAAABAD"
-        },
-        "recipe2":{
-            "name": "banana pie",
-            "time": 1,
-            "image": "https://cdn.sallysbakingaddiction.com/wp-content/uploads/2016/07/Banana-Cream-Pie-8.jpg"
-        },
-    }
+    # get matched recipes from db with the fields and params as indicated below
+    completed_recipes_info = get_completed_recipes_info(conn, selected_ingredient)
+
+    data = {"size": len(completed_recipes_info), "data": []}
+    for recipe_info in completed_recipes_info:
+        recipe_data = {
+            "name": recipe_info[1],
+            "time": recipe_info[2],
+            "link": recipe_info[3]
+        }
+        data["data"].append(recipe_data)
+
     shuffle_counter = 0;
-    return jsonify(sample_data)
+    return jsonify(data)
