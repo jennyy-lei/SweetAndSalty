@@ -8,6 +8,7 @@ flask = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
 sqlalchemy-cockroachdb = "*"
+flask-cors = "*"
 
 [dev-packages]
 

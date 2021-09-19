@@ -9,7 +9,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import { makeStyles } from "@material-ui/core/styles";
-import { httpPost } from "../Endpoints/endpoints"
+import { httpPost,httpGet } from "../Endpoints/endpoints"
 
 const useStyles = makeStyles(() => ({
     buttonContainer: {
@@ -49,6 +49,8 @@ export default function CustomizeModal({open, handleCancel, handleClose }) {
 
     const handleSubmit = () => {
         httpPost("/init", { data: ingredients, time: timeLimit });
+        setTimeout(() => {  httpGet("/ingre");}, 2000); //! make sure to finish one request before another
+        
         handleClose();
     };
 
