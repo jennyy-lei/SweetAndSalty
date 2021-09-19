@@ -75,10 +75,10 @@ export default function CustomizeModal({open, handleCancel, handleClose, submit}
             />
             <FormLabel className="text" component="legend">Cooking Time Range</FormLabel>
             <RadioGroup className={classes.content} row name="row-radio-buttons-group" onChange={handleTimeRangeChange}>
-                <FormControlLabel checked={timeLimit==1} className="radio" value={1} control={<Radio />} label="0-10 Min" />
-                <FormControlLabel checked={timeLimit==2} className="radio" value={2} control={<Radio />} label="10-30 Min" />
-                <FormControlLabel checked={timeLimit==3} className="radio" value={3} control={<Radio />} label="30-60 Min" />
-                <FormControlLabel checked={timeLimit==4} className="radio" value={4} control={<Radio />} label="60+ Min"/>
+                <FormControlLabel checked={timeLimit==1} className="radio" value={1} control={<Radio />} label="0-10 min" />
+                <FormControlLabel checked={timeLimit==2} className="radio" value={2} control={<Radio />} label="10-30 min" />
+                <FormControlLabel checked={timeLimit==3} className="radio" value={3} control={<Radio />} label="30-60 min" />
+                <FormControlLabel checked={timeLimit==4} className="radio" value={4} control={<Radio />} label="No Limit"/>
             </RadioGroup>
             <DialogActions className={classes.buttonContainer}>
                 <Button onClick={handleCancel}>Back</Button>
