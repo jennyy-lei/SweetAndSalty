@@ -67,6 +67,16 @@
   border-radius: 999px;
 }
 
+.loading {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: rgb(117, 119, 126);
+}
+
 .empty {
   width: 200px;
   height: 40px;

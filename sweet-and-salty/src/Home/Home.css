@@ -2,8 +2,12 @@
   color: #ff6c10 !important;
   border-color: #ff6c10 !important;
   transition: 0.1s;
+  background-color: #ffebdf !important;
+  font-size: 1rem !important;
+  padding: 5px 20px !important;
 }
 
 .MuiButton-outlinedPrimary:hover {
-  background-color: #ffebdf !important;
+  background-color: #ff6c10 !important;
+  color: white !important;
 }

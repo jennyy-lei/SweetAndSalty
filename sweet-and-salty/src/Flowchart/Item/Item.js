@@ -1,4 +1,5 @@
-import React from 'react';
+import { CircularProgress } from '@material-ui/core';
+import React, { useState } from 'react';
 import { Handle } from 'react-flow-renderer';
 import './Item.css';
 
@@ -24,13 +25,17 @@ const CustomNodeComponent = ({ data }) => {
 };
 
 const CustomListComponent = ({ data }) => {
+  let [load, setLoad] = useState(false);
+
   return (
     <div className="rfr-list">
-      {data.options.length === 0 ? <div className="empty">No more possible ingredient combinations!</div> : data.options.map(item => (
-        <div key={k++} onClick={ () => { data.onSelect(item) } } className="rfr-item rfr-list-item">
+      {load == true ? 
+      <div className="loading"><CircularProgress color="gray" size={32} /></div> : 
+      (data.options.length === 0 ? <div className="empty">No possible ingredient combinations!</div> : data.options.map(item => (
+        <div key={k++} onClick={ () => { setLoad(true); data.onSelect(item) } } className="rfr-item rfr-list-item">
           <div className="rfr-item-text">{item}</div>
         </div>
-      ))}
+      )))}
 
       <button className="refresh" onClick={() => data.refresh()}>Refresh</button>
     </div>

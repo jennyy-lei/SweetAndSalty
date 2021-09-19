@@ -4,21 +4,22 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(() => ({
     link: {
         height: "100%",
-        width: "200px",
+        width: "250px",
         flexShrink: 0,
         textDecoration: "none",
-        color: "inherit"
+        color: "inherit",
+        overflow: "auto",
+        borderRadius: "5px",
+        padding: "15px",
+        boxSizing: "border-box",
+        background: "#ffebdf",
+        borderBottom: "5px solid #ffb78b",
     },
     metadata: {
         height: "100%",
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        borderRadius: "5px",
-        background: "#ffebdf",
-        padding: "15px",
-        boxSizing: "border-box",
-        borderBottom: "5px solid #ffb78b",
     },
     recipeData: {
         lineHeight: "normal",
@@ -27,8 +28,8 @@ const useStyles = makeStyles(() => ({
     },
     name: {
         whiteSpace: "normal",
-        fontSize: "1.5rem",
-        marginBottom: "15px"
+        fontSize: "1.25rem",
+        marginBottom: "10px"
     }
 }));
 
@@ -39,7 +40,7 @@ export default function AssetCard({ data }) {
         <a href={"https://" + data.link} className={classes.link} target="_blank">
             <div className={classes.metadata}>
                 <div className={`${classes.recipeData} ${classes.name}`}>{data.name}</div>
-                <div className={classes.recipeData}>{"Expected Cooking Time: " + data.time + " Min"}</div>
+                <div className={classes.recipeData}>Expected Cooking Time: { data.time == 0 ? "N/A" : `${data.time} min`}</div>
             </div>
         </a>
     );
