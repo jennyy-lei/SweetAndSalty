@@ -1,0 +1,11 @@
+.name {
+  top: 20px;
+  left: 30px;
+  padding: 5px;
+  font-size: 1.5rem;
+  font-family: 'Nothing You Could Do', cursive;
+  cursor: pointer;
+  z-index: 1000;
+  color: black;
+  text-decoration: none;
+}

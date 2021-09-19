@@ -4,8 +4,8 @@
 }
 
 .scroll-wrapper {
-  position: fixed;
-  bottom: 5px;
+  position: absolute;
+  bottom: 0;
   height: 6px;
   width: calc(100% - 10px);
   left: 5px;
@@ -19,4 +19,13 @@
   position: absolute;
   border-radius: 999px;
   cursor: pointer;
+}
+
+.bg {
+  background-color: #fafafa;
+  height: 100%;
+  width: 400px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }

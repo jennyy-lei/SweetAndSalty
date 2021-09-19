@@ -1,13 +1,20 @@
 import React from "react";
 import CustomizeModal from "../Modals/CustomizeModal";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Flowchart } from "../Flowchart/Flowchart";
 import { makeStyles } from "@material-ui/core/styles";
+import "./RecipeFinder.css";
+import RecipeDisplay from "../RecipeDisplay/recipeDisplay";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
-        height: "100%"
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
     },
+    flow: {
+        flex: 7,
+    }
 }));
 
 export default function RecipeFinder() {
@@ -30,7 +37,18 @@ export default function RecipeFinder() {
     
     return (
         <div className={classes.wrapper}>
-            <Flowchart />
+            <Link to="/" className="name">
+                <div>
+                    Sweet &amp; Salty
+                </div>
+            </Link>
+
+            <div className={classes.flow}>
+                <Flowchart />
+            </div>
+            <div style={{flex: 3, background: "white"}}>
+                <RecipeDisplay />
+            </div>
             <CustomizeModal
                 open={modalOpen}
                 handleCancel={onModalCancel}

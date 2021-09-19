@@ -18,10 +18,12 @@ export function Flowchart() {
   function addListener(x) { listener = x }
 
   return (
-    <ReactFlowProvider>
-      <Flow setCalculatedWidth={setCalculatedWidth} />
-      <Scroll addListener={addListener} />
-    </ReactFlowProvider>
+    <div style={{height: "100%", position: "relative"}}>
+      <ReactFlowProvider>
+        <Flow setCalculatedWidth={setCalculatedWidth} />
+        <Scroll addListener={addListener} />
+      </ReactFlowProvider>
+    </div>
   );
 }
 
@@ -115,7 +117,9 @@ class Flow extends React.Component {
         id: this.id++,
         data: { text: "Keep selecting ingredients on the right while we narrow down the recipes for you!" },
         type: "text",
-        position: { x: w - itemSize - padding - spacing, y: h/2 - 20 }
+        position: { x: w - itemSize - padding - spacing, y: h/2 - 20 },
+        draggable: false,
+        connectable: false
       });
     } else {
       for (let i in values) {
@@ -179,6 +183,7 @@ class Flow extends React.Component {
   render() {
     return (
       <div className="flowWrapper" ref={this.wrapper}>
+        <div className="bg"></div>
         <ReactFlow
           elements={this.state.elements}
           nodeTypes={nodeTypes}

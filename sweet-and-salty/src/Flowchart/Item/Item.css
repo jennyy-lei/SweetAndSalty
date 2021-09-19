@@ -1,14 +1,17 @@
 .rfr-text-item {
-  color: rgb(146, 148, 156);
+  color: rgb(117, 119, 126);
   height: 40px;
   transform: translateX(-100%);
   font-size: 1.25rem;
+  padding: 0 250px;
+  cursor: default;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;;
 }
 
 .rfr-item {
   width: 200px;
   border-radius: 5px;
-  box-shadow: 0 2px 2px 0 #eee2dc;
+  box-shadow: 0 2px 3px 0 #df9976;
   background-color: white;
   color: #ff6c10;
   /* border: 1px solid #ff6c10; */
@@ -41,16 +44,20 @@
   flex-direction: column;
   gap: 40px;
   cursor: default;
+  position: relative;
 }
 
 .rfr-list-item {
-  opacity: 0.5;
+  opacity: 1;
   transition: 0.2s;
   cursor: pointer;
+  background-color: #ffebdf;
 }
 
 .rfr-list-item:hover {
-  opacity: 1;
+  background-color: #ff6d24;
+  color: white
+  /* box-shadow: 0 2px 2px 0 #ff6d24; */
 }
 
 .rfr-handle {
