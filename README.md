@@ -14,7 +14,7 @@ For the user's convenience, they may submit an initial list of ingredients they'
 
 **Front-end**: The front-end website allows users to easily input the ingredients and is built using React and Javascript.
 
-**Back-end**: We found a suitable dataset that mapped recipes to ingredients, processed the data into a usable format and uploaded it to a CockroachDB cluster. Then we used a Flask webserver to communicate with our front-end and query the database as required.
+**Back-end**: We found a suitable [dataset](https://clickhouse.tech/docs/en/getting-started/example-datasets/recipes/) that mapped recipes to ingredients, processed the data into a usable format and uploaded it to a CockroachDB cluster. Then we used a Flask webserver to communicate with our front-end and query the database as required.
 
 ## Challenges we ran into
 
