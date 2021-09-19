@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const prefix = "";
+const prefix = "http://localhost:5000";
 export const httpGet = (endpoint) => {
     const url = prefix + endpoint;
     return axios

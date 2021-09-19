@@ -1,29 +1,40 @@
 from flask import Flask, jsonify, request
 from .models import Recipes,Ingredients,IngredientsToReceipes
-from sqlalchemy import create_engine # used to make a handle to the db
-from sqlalchemy.orm import session, sessionmaker
+from flask_cors import CORS
 import json
+import psycopg2
 
-#TODO: engine = create_engine('cockroachdbbb thingy:///:memory:', echo=True)
 app = Flask(__name__)
-Session = sessionmaker() #TODO: add bind=engine when it is availabel
-
+CORS(app)
 selected_ingredient = []
 time_choice = None
 matched_recipes = [] # contain the recipes we already matched and sent to front, filter these
-shuffle_counter = 0;
+shuffle_counter = 0
+
 @app.route('/init', methods=['POST'])
 def post_initial_params():
-    data = json.loads(request.get_json())
+    # set the vars to global
+    global selected_ingredient
+    global time_choice
+    
+    # get req json
+    req_json = request.get_json()
+
+    #load json to object
+    data = json.loads(str(req_json).replace("'",'"'))
     raw_text = data["data"]
     time_choice = data["time"]
-    selected_ingredient = raw_text.replace(" ","").toLowerCase().split(',') #remove spaces, lowercase force and split via comma
+    raw_text = raw_text.replace(" ","").lower()
+
+    # only modify if not [""]
+    if len(raw_text) != 0:
+        global selected_ingredient
+        selected_ingredient = raw_text.split(',') #remove spaces, lowercase force and split via comma
     return "", 204
 
 @app.route('/ingre', methods=['GET'])
 def get_recom_ingre():
-    session = Session()
-
+    global shuffle_counter
     #TODO: querry the database for 5 ingredients that matches our criteria
     sample_data = {
         "ingre1": "Banana",
@@ -32,11 +43,14 @@ def get_recom_ingre():
         "ingre4": "chicken",
         "ingre5": "water"
     }
+    # prepare for next time call with shuffle++
     shuffle_counter +=1
-    return jsonify(sample_data)
+    resp = app.make_response(jsonify(sample_data))
+    return resp
 
 @app.route('/ingre', methods=['PUT'])
 def put_selected_ingre():
+    global selected_ingredient
     data = json.loads(request.get_json())
     new_selected_ingre = data["ingre"]
     selected_ingredient.append(new_selected_ingre)
@@ -46,6 +60,7 @@ def put_selected_ingre():
 
 @app.route('/recipe', methods=['GET'])
 def get_matched_recipes():
+    global shuffle_counter
     #TODO: get matched recipes from db with the fields and params as indicated below
     sample_data = {
         "size":2,
