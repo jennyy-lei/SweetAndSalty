@@ -11,7 +11,6 @@ export function Flowchart({newRecommendedRecipes}) {
 
   let calculatedWidth = 0;
   function setCalculatedWidth(calcW, screenW) {
-    console.log("Wrapper", calculatedWidth, calcW);
     if (calculatedWidth !== calcW) listener(calcW, screenW);
     calculatedWidth = calcW;
   }
@@ -31,42 +30,21 @@ export function Flowchart({newRecommendedRecipes}) {
 function Scroll(props) {
   const bar = useRef(null);
   const transform = useStoreState((store) => store.transform);
-  // const { setCenter } = useZoomPanHelper();
 
   const [barWidth, setBarWidth] = useState(100);
   const [barRight, setBarRight] = useState(0);
   const [width, setWidth] = useState({cw: 0, w: 0});
-
-  // let mouseDown = false;
-  // let startPos;
 
   useEffect(() => {
     if (width.cw - width.w > 0) setBarRight(transform[0] / (width.cw - width.w) * (100 - barWidth));
     else setBarRight(0);
   }, [transform[0]]);
 
-  // setCenter(x, y, 1);
 
   props.addListener(function (calcW, screenW) {
     setWidth({cw: calcW, w: screenW})
     setBarWidth(screenW / calcW * 100);
   })
-
-  // bar.current?.addEventListener("mousedown", (ev) => {
-  //   if (!mouseDown) startPos = ev.screenX;
-  //   mouseDown = true
-  // })
-  // bar.current?.addEventListener("mouseup", () => { mouseDown = false })
-  // bar.current?.addEventListener("mousemove", (ev) => {
-  //   if (mouseDown) {
-  //     let leftDist = (100 - barRight - barWidth) / 100 * width.w;
-  //     let rightDist = barRight / 100 * width.w;
-  //     let dx = ev.screenX - startPos;
-  //     if (dx < 0 && -dx < leftDist) {
-  //       setBarRight((rightDist - dx) / width.w * 100);
-  //     }
-  //   }
-  // })
 
   return (
     <div className="scroll-wrapper">
@@ -98,12 +76,10 @@ class Flow extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("Flow", this.calcW, this.wrapper.current?.clientWidth || 0);
     this.props.setCalculatedWidth(this.calcW, this.wrapper.current?.clientWidth || 0);
   }
 
   resize() {
-      console.log("jgkjg");
       this.makeNodes(this.selectedIngredients, this.nextIngredients);
   }
 
@@ -159,7 +135,6 @@ class Flow extends React.Component {
 
   onSelect(option) {
     this.selectedIngredients.push(option);
-    console.log(option);
     httpPut("/ingre", { ingre : option });
     let nextIngredientOptions = httpGet("/ingre");
     let recommendedRecipes = Object.values(httpGet("/recipe"));

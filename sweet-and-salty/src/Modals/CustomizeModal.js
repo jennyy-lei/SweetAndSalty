@@ -43,12 +43,10 @@ export default function CustomizeModal({open, handleCancel, handleClose, submit}
     const handleIngredientInputChange = (event) => {
         const inputIngredients = event.target.value;
         setIngredients(inputIngredients);
-        console.log(ingredients);
     };
 
     const handleTimeRangeChange = (event) => {
         setTimeLimit(event.target.value);
-        console.log(timeLimit);
     };
 
     const handleSubmit = () => {
