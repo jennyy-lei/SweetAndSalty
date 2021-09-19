@@ -78,6 +78,7 @@ class Flow extends React.Component {
   }
 
   componentDidUpdate() {
+    console.log("update");
     this.props.setCalculatedWidth(this.calcW, this.wrapper.current?.clientWidth || 0);
   }
 
@@ -137,9 +138,9 @@ class Flow extends React.Component {
   }
 
   onSelect(option) {
+    console.log("onSelect");
     this.selectedIngredients.push(option);
     httpPut("/ingre", { ingre : option });
-    // let nextIngredientOptions =
     httpGet("/ingre").then(((data) => {
       console.log("flowchart ingredients", data.data.data);
       this.nextIngredients = data.data.data;
@@ -151,8 +152,6 @@ class Flow extends React.Component {
       console.log("flowchart recipes", data.data.data);
       this.props.newRecommendedRecipes(data.data.data);
     }).bind(this));
-    // this.props.newRecommendedRecipes(recommendedRecipes);
-    // if (Array.isArray(nextIngredientOptions)) this.nextIngredients = nextIngredientOptions;
   }
 
   calcListHeight(n) {
