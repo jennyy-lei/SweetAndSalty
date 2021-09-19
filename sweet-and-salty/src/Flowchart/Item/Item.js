@@ -37,7 +37,7 @@ const CustomListComponent = ({ data }) => {
         </div>
       )))}
 
-      <button className="refresh" onClick={() => data.refresh()}>Refresh</button>
+      <button className="refresh" onClick={() => { setLoad(true); data.refresh() }}>Refresh</button>
     </div>
   )
 }
