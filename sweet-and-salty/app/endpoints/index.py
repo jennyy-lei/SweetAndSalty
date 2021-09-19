@@ -2,10 +2,11 @@ from flask import Flask, jsonify, request
 from .models import Recipes,Ingredients,IngredientsToReceipes
 from flask_cors import CORS
 import json
-import psycopg2
+import psycopg2 # TODO: whatever we use for db access
 
 app = Flask(__name__)
 CORS(app)
+
 selected_ingredient = []
 time_choice = None
 matched_recipes = [] # contain the recipes we already matched and sent to front, filter these
