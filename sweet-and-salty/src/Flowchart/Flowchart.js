@@ -5,9 +5,9 @@ import { nodeTypes } from "./Item/Item";
 import { httpGet, httpPut } from "../Endpoints/endpoints";
 
 export function Flowchart({newRecommendedRecipes}) {
-
   // let height = this.wrapper.current?.clientHeight;
   // let width = this.wrapper.current?.clientHeight;
+  const [scroll, setScroll] = useState(0);
 
   let calculatedWidth = 0;
   function setCalculatedWidth(calcW, screenW) {
@@ -19,9 +19,10 @@ export function Flowchart({newRecommendedRecipes}) {
 
   return (
     <div style={{height: "100%", position: "relative"}}>
+      <div className="bg" style={{right: 40 - scroll}}></div>
       <ReactFlowProvider>
         <Flow setCalculatedWidth={setCalculatedWidth} newRecommendedRecipes={newRecommendedRecipes}/>
-        <Scroll addListener={addListener} />
+        <Scroll addListener={addListener} setScroll={setScroll} />
       </ReactFlowProvider>
     </div>
   );
@@ -36,6 +37,7 @@ function Scroll(props) {
   const [width, setWidth] = useState({cw: 0, w: 0});
 
   useEffect(() => {
+    props.setScroll(transform[0]);
     if (width.cw - width.w > 0) setBarRight(transform[0] / (width.cw - width.w) * (100 - barWidth));
     else setBarRight(0);
   }, [transform[0]]);
@@ -48,7 +50,7 @@ function Scroll(props) {
 
   return (
     <div className="scroll-wrapper">
-      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%", opacity: barWidth == 100 ? 0 : 1}}></div>
+      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%", opacity: barWidth === 100 ? 0 : 1}}></div>
     </div>
   )
 }
@@ -165,7 +167,6 @@ class Flow extends React.Component {
   render() {
     return (
       <div className="flowWrapper" ref={this.wrapper}>
-        <div className="bg"></div>
         <ReactFlow
           elements={this.state.elements}
           nodeTypes={nodeTypes}
@@ -173,6 +174,8 @@ class Flow extends React.Component {
           panOnScrollMode="horizontal"
           panOnScrollSpeed="1.25"
           zoomOnScroll="false"
+          zoomOnPinch="false"
+          zoomOnDoubleClick="false"
           translateExtent={[[this.calcExtent(), -Infinity], [this.wrapper.current?.clientWidth || 0, Infinity]]} >
         </ReactFlow>
       </div>
