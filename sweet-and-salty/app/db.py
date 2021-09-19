@@ -131,7 +131,7 @@ def get_viable_recipes_rids(conn, iids):
     return list(valid_recipes)
 
 
-def get_completed_recipes_info(conn, ingredients):
+def get_completed_recipes_info(conn, ingredients, lower, upper):
     if not ingredients:
         return []
     iid = get_iid(conn, ingredients[-1])
@@ -143,13 +143,14 @@ def get_completed_recipes_info(conn, ingredients):
 
     completed_recipes = []
     for recipe_info in info:
-        req_iids = [int(x) for x in recipe_info[-1].split(';')]
-        complete = 1
-        for iid in req_iids:
-            if iid not in iids:
-                complete = 0
-        if complete:
-            completed_recipes.append(recipe_info)
+        if recipe_info[2] == 0 or lower <= recipe_info[2] <= upper:
+            req_iids = [int(x) for x in recipe_info[-1].split(';')]
+            complete = 1
+            for iid in req_iids:
+                if iid not in iids:
+                    complete = 0
+            if complete:
+                completed_recipes.append(recipe_info)
 
     return completed_recipes
 
