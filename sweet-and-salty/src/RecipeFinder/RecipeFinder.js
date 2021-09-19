@@ -64,7 +64,7 @@ export default function RecipeFinder() {
     }
     
     const newRecommendedRecipes = (newRecommendedRecipes) => {
-        setRecipeList(newRecommendedRecipes + recipeList); 
+        setRecipeList(newRecommendedRecipes); 
     }
     
     return (
