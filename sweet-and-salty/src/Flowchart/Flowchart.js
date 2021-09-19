@@ -121,6 +121,7 @@ class Flow extends React.Component {
       n.pop();
     }
 
+    console.log("future values", futureValues);
     n.push({
       id: this.id++,
       data: { id: values.length + 1, options: futureValues, onSelect: this.onSelect.bind(this) },
@@ -138,14 +139,20 @@ class Flow extends React.Component {
   onSelect(option) {
     this.selectedIngredients.push(option);
     httpPut("/ingre", { ingre : option });
-    let nextIngredientOptions = httpGet("/ingre").data;
-    let recommendedRecipes = httpGet("/recipe").data;
-    this.props.newRecommendedRecipes(recommendedRecipes);
-    if (Array.isArray(nextIngredientOptions)) this.nextIngredients = nextIngredientOptions;
-
-    this.setState({
-      elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
-    })
+    // let nextIngredientOptions =
+    httpGet("/ingre").then(((data) => {
+      console.log("flowchart ingredients", data.data.data);
+      this.nextIngredients = data.data.data;
+      this.setState({
+        elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
+      })
+    }).bind(this));
+    httpGet("/recipe").then(((data) => {
+      console.log("flowchart recipes", data.data.data);
+      this.props.newRecommendedRecipes(data.data.data);
+    }).bind(this));
+    // this.props.newRecommendedRecipes(recommendedRecipes);
+    // if (Array.isArray(nextIngredientOptions)) this.nextIngredients = nextIngredientOptions;
   }
 
   calcListHeight(n) {
