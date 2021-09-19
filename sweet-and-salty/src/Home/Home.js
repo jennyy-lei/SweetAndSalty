@@ -21,11 +21,10 @@ const useStyles = makeStyles(() => ({
       },
       nav: {
         outline: "solid",
-        
       },
       main: {
           fontSize: "500%",
-          marginBottom: "20px",
+          marginBottom: "50px",
           fontFamily: 'Nothing You Could Do, cursive',
       },
 }));
