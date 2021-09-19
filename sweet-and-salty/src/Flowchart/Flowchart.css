@@ -6,9 +6,9 @@
 .scroll-wrapper {
   position: absolute;
   bottom: 0;
-  height: 6px;
-  width: calc(100% - 10px);
-  left: 5px;
+  height: 3px;
+  width: 100%;
+  /* left: 5px; */
   box-sizing: border-box;
   z-index: 1000;
 }
@@ -17,15 +17,30 @@
   height: 100%;
   background-color: #ffb78b;
   position: absolute;
-  border-radius: 999px;
+  /* border-radius: 999px; */
   cursor: pointer;
+  transition: opacity 0.5s, width 0.5s;
 }
 
 .bg {
-  background-color: #fafafa;
-  height: 100%;
-  width: 400px;
+  background-color: #fcfcfc;
+  height: 480px;
+  width: 320px;
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 5px;
+}
+
+.bg::before {
+  width: 100%;
+  text-align: center;
+  content: "Ingredients";
+  position: absolute;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  color: rgb(117, 119 , 126);
+  box-sizing: border-box;
+  letter-spacing: 1px;
 }

@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Flowchart.css";
-import ReactFlow, { MiniMap, ReactFlowProvider, useStoreState } from 'react-flow-renderer';
+import ReactFlow, { ReactFlowProvider, useStoreState } from 'react-flow-renderer';
 import { nodeTypes } from "./Item/Item";
 import { httpGet, httpPut } from "../Endpoints/endpoints";
 
-export function Flowchart(newRecommendedRecipes) {
+export function Flowchart({newRecommendedRecipes}) {
 
   // let height = this.wrapper.current?.clientHeight;
   // let width = this.wrapper.current?.clientHeight;
@@ -70,7 +70,7 @@ function Scroll(props) {
 
   return (
     <div className="scroll-wrapper">
-      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%"}}></div>
+      <div ref={bar} className="scroll-bar" style={{width: barWidth + "%", right: barRight + "%", opacity: barWidth == 100 ? 0 : 1}}></div>
     </div>
   )
 }
@@ -81,7 +81,7 @@ class Flow extends React.Component {
 
     this.calcW = 0;
     this.selectedIngredients = [];
-    this.nextIngredients = ["Tomato", "Potato"];
+    this.nextIngredients = ["Tomato", "Potato", "Play Doh", "Sago", "Avocado"];
     this.id = 0;
     this.wrapper = React.createRef();
     this.state = { elements: [] }
@@ -116,7 +116,7 @@ class Flow extends React.Component {
     if (values.length === 0) {
       n.push({
         id: this.id++,
-        data: { text: "Keep selecting ingredients on the right while we narrow down the recipes for you!" },
+        data: { text: "Keep selecting ingredients on the right while we find recipes!" },
         type: "text",
         position: { x: w - itemSize - padding - spacing, y: h/2 - 20 },
         draggable: false,
@@ -164,7 +164,7 @@ class Flow extends React.Component {
     let nextIngredientOptions = Object.values(httpGet("/ingre"));
     let recommendedRecipes = httpGet("/recipe");
     this.props.newRecommendedRecipes(recommendedRecipes);
-    this.nextIngredients = nextIngredientOptions;
+    if (Array.isArray(nextIngredientOptions)) this.nextIngredients = nextIngredientOptions;
 
     this.setState({
       elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
@@ -199,29 +199,6 @@ class Flow extends React.Component {
           panOnScrollSpeed="1.25"
           zoomOnScroll="false"
           translateExtent={[[this.calcExtent(), -Infinity], [this.wrapper.current?.clientWidth || 0, Infinity]]} >
-          <MiniMap
-            className="miniMap"
-            nodeBorderRadius={15}
-            nodeStrokeColor={(node) => {
-              switch (node.type) {
-                case 'text': return 'transparent';
-                default: return 'gray';
-              }
-            }}
-            nodeColor={(node) => {
-              switch (node.type) {
-                case 'text':
-                  return 'transparent';
-                case 'default':
-                  return '#00ff00';
-                case 'output':
-                  return 'rgb(0,0,255)';
-                default:
-                  return '#eee';
-              }
-            }}
-            nodeStrokeWidth={3}
-          />
         </ReactFlow>
       </div>
     );
