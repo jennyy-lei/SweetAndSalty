@@ -78,6 +78,7 @@ class Flow extends React.Component {
   }
 
   componentDidUpdate() {
+    console.log("update");
     this.props.setCalculatedWidth(this.calcW, this.wrapper.current?.clientWidth || 0);
   }
 
@@ -123,7 +124,7 @@ class Flow extends React.Component {
 
     n.push({
       id: this.id++,
-      data: { id: values.length + 1, options: futureValues, onSelect: this.onSelect.bind(this) },
+      data: { id: values.length + 1, options: futureValues, onSelect: this.onSelect.bind(this), refresh: this.refresh.bind(this) },
       type: "list",
       position: {x: w - itemSize - padding, y: h/2 - this.calcListHeight(futureValues.length)/2},
       draggable: false,
@@ -137,15 +138,30 @@ class Flow extends React.Component {
 
   onSelect(option) {
     this.selectedIngredients.push(option);
-    httpPut("/ingre", { ingre : option });
+    httpPut("/ingre", { ingre : option }).then(((data) => {
+      console.log("done put")
+      httpGet("/ingre").then(((data) => {
+        console.log("done get")
+        this.nextIngredients = data.data.data;
+        this.setState({
+          elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
+        })
+      }).bind(this));
+
+      httpGet("/recipe").then(((data) => {
+        console.log("done get2")
+        this.props.newRecommendedRecipes(data.data.data);
+      }).bind(this));
+    }).bind(this));
+  }
+
+  refresh() {
     httpGet("/ingre").then(((data) => {
+      console.log("done get")
       this.nextIngredients = data.data.data;
       this.setState({
         elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
       })
-    }).bind(this));
-    httpGet("/recipe").then(((data) => {
-      this.props.newRecommendedRecipes(data.data.data);
     }).bind(this));
   }
 

@@ -31,6 +31,8 @@ const CustomListComponent = ({ data }) => {
           <div className="rfr-item-text">{item}</div>
         </div>
       ))}
+
+      <button className="refresh" onClick={() => data.refresh()}>Refresh</button>
     </div>
   )
 }
