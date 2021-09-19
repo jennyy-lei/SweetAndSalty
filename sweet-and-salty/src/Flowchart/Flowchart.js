@@ -78,7 +78,6 @@ class Flow extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("update");
     this.props.setCalculatedWidth(this.calcW, this.wrapper.current?.clientWidth || 0);
   }
 
@@ -122,7 +121,6 @@ class Flow extends React.Component {
       n.pop();
     }
 
-    console.log("future values", futureValues);
     n.push({
       id: this.id++,
       data: { id: values.length + 1, options: futureValues, onSelect: this.onSelect.bind(this) },
@@ -138,18 +136,15 @@ class Flow extends React.Component {
   }
 
   onSelect(option) {
-    console.log("onSelect");
     this.selectedIngredients.push(option);
     httpPut("/ingre", { ingre : option });
     httpGet("/ingre").then(((data) => {
-      console.log("flowchart ingredients", data.data.data);
       this.nextIngredients = data.data.data;
       this.setState({
         elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
       })
     }).bind(this));
     httpGet("/recipe").then(((data) => {
-      console.log("flowchart recipes", data.data.data);
       this.props.newRecommendedRecipes(data.data.data);
     }).bind(this));
   }
