@@ -5,6 +5,7 @@ import { Flowchart } from "../Flowchart/Flowchart";
 import { makeStyles } from "@material-ui/core/styles";
 import "./RecipeFinder.css";
 import RecipeDisplay from "../RecipeDisplay/recipeDisplay";
+import { httpGet } from "../Endpoints/endpoints"
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -59,6 +60,10 @@ export default function RecipeFinder() {
 
     const onSubmit = (time, ing) => {
         setResults({ time: time, ing: ing });
+        httpGet("/recipe").then(((data) => {
+            console.log("done get recipes for initial ingredients");
+            setRecipeList(data.data.data);
+        }).bind(this));
     }
 
     const toTime = (i) => {

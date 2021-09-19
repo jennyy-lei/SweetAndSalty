@@ -7,7 +7,7 @@ import psycopg2
 app = Flask(__name__)
 CORS(app)
 selected_ingredient = []
-matched_recipes = []
+matched_recipes = {"size":0,"data":[]}
 time_choice = None
 shuffle_counter = 0
 conn = psycopg2.connect(conn_string)
@@ -24,7 +24,7 @@ def post_initial_params():
     matched_recipes = {"size":0,"data":[]}
     # get req json
     req_json = request.get_json()
-
+    print(req_json)
     #load json to object
     data = json.loads(str(req_json).replace("'",'"'))
     raw_text = data["data"]
@@ -64,8 +64,6 @@ def put_selected_ingre():
 def get_matched_recipes():
     print("selected are:")
     print(selected_ingredient)
-    print("matched size is:")
-    print(matched_recipes["size"])
     global shuffle_counter
     # get matched recipes from db with the fields and params as indicated below
     completed_recipes_info = get_completed_recipes_info(conn, selected_ingredient)
@@ -80,4 +78,6 @@ def get_matched_recipes():
         matched_recipes["data"].append(recipe_data)
 
     shuffle_counter = 0;
+    print("matched size is:")
+    print(matched_recipes["size"])
     return jsonify(matched_recipes)
