@@ -46,7 +46,7 @@ export default function CustomizeModal({open, handleCancel, handleClose, submit}
     };
 
     const handleTimeRangeChange = (event) => {
-        setTimeLimit(event.target.value);
+        setTimeLimit(parseInt(event.target.value));
     };
 
     const handleSubmit = () => {
