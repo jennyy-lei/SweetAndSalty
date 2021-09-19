@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Flowchart.css";
-import ReactFlow, { MiniMap, ReactFlowProvider, useStoreState } from 'react-flow-renderer';
+import ReactFlow, { ReactFlowProvider, useStoreState } from 'react-flow-renderer';
 import { nodeTypes } from "./Item/Item";
+import { httpGet, httpPut } from "../Endpoints/endpoints";
 
-export function Flowchart() {
+export function Flowchart({newRecommendedRecipes}) {
 
   // let height = this.wrapper.current?.clientHeight;
   // let width = this.wrapper.current?.clientHeight;
@@ -20,7 +21,7 @@ export function Flowchart() {
   return (
     <div style={{height: "100%", position: "relative"}}>
       <ReactFlowProvider>
-        <Flow setCalculatedWidth={setCalculatedWidth} />
+        <Flow setCalculatedWidth={setCalculatedWidth} newRecommendedRecipes={newRecommendedRecipes}/>
         <Scroll addListener={addListener} />
       </ReactFlowProvider>
     </div>
@@ -158,6 +159,12 @@ class Flow extends React.Component {
 
   onSelect(option) {
     this.selectedIngredients.push(option);
+    console.log(option);
+    httpPut("/ingre", { ingre : option });
+    let nextIngredientOptions = httpGet("/ingre");
+    let recommendedRecipes = Object.values(httpGet("/recipe"));
+    this.props.newRecommendedRecipes(recommendedRecipes);
+    if (Array.isArray(nextIngredientOptions)) this.nextIngredients = nextIngredientOptions;
 
     this.setState({
       elements: this.makeNodes(this.selectedIngredients, this.nextIngredients)
@@ -192,29 +199,6 @@ class Flow extends React.Component {
           panOnScrollSpeed="1.25"
           zoomOnScroll="false"
           translateExtent={[[this.calcExtent(), -Infinity], [this.wrapper.current?.clientWidth || 0, Infinity]]} >
-          {/* <MiniMap
-            className="miniMap"
-            nodeBorderRadius={15}
-            nodeStrokeColor={(node) => {
-              switch (node.type) {
-                case 'text': return 'transparent';
-                default: return 'gray';
-              }
-            }}
-            nodeColor={(node) => {
-              switch (node.type) {
-                case 'text':
-                  return 'transparent';
-                case 'default':
-                  return '#00ff00';
-                case 'output':
-                  return 'rgb(0,0,255)';
-                default:
-                  return '#eee';
-              }
-            }}
-            nodeStrokeWidth={3}
-          /> */}
         </ReactFlow>
       </div>
     );

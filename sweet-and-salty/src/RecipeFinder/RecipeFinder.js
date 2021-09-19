@@ -38,6 +38,7 @@ export default function RecipeFinder() {
 
     const [modalOpen, setModalOpen] = React.useState(true);
     const [results, setResults] = React.useState(null);
+    const [recipeList, setRecipeList] = React.useState([]);
 
     const onModalCancel = () => {
         setModalOpen(false);
@@ -64,6 +65,10 @@ export default function RecipeFinder() {
         }
     }
     
+    const newRecommendedRecipes = (newRecommendedRecipes) => {
+        setRecipeList(newRecommendedRecipes + recipeList); 
+    }
+    
     return (
         <div className={classes.wrapper}>
             <Link to="/" className="name">
@@ -76,10 +81,13 @@ export default function RecipeFinder() {
                 Time:&nbsp;&nbsp;<span className={classes.important}>{toTime(results?.time)}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ingredients:&nbsp;&nbsp;<span className={classes.important}>{results?.ing || "_"}</span>
             </div>
             <div className={classes.flow}>
-                <Flowchart />
+                <Flowchart 
+                    newRecommendedRecipes={newRecommendedRecipes}/>
             </div>
             <div style={{flex: 3, background: "#fafafa"}}>
-                <RecipeDisplay />
+                <RecipeDisplay 
+                    recipes={recipeList}
+                />
             </div>
             <CustomizeModal
                 open={modalOpen}
