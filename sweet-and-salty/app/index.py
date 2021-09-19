@@ -10,7 +10,20 @@ selected_ingredient = []
 matched_recipes = {"size":0,"data":[]}
 time_choice = None
 shuffle_counter = 0
+skip = False
 conn = psycopg2.connect(conn_string)
+# querries and updates the local matched recipes with some selected ingredient given. used to optimize search given some input ingre
+def q_receipes(selected_in):
+    global matched_recipes
+    completed_recipes_info = get_completed_recipes_info(conn, selected_in)
+    matched_recipes["size"] += len(completed_recipes_info)
+    for recipe_info in completed_recipes_info:
+        recipe_data = {
+            "name": recipe_info[1],
+            "time": recipe_info[2],
+            "link": recipe_info[3]
+        }
+        matched_recipes["data"].append(recipe_data)
 
 @app.route('/init', methods=['POST'])
 def post_initial_params():
@@ -18,22 +31,28 @@ def post_initial_params():
     global selected_ingredient
     global time_choice
     global matched_recipes
+    global skip
     # hard reset if page is refreshed
     selected_ingredient = []
     time_choice = None
     matched_recipes = {"size":0,"data":[]}
     # get req json
     req_json = request.get_json()
-    print(req_json)
     #load json to object
     data = json.loads(str(req_json).replace("'",'"'))
     raw_text = data["data"]
     time_choice = data["time"]
-    raw_text = raw_text.replace(" ","").lower()
+    raw_text = raw_text.lower()
 
     # only modify if not [""]
     if len(raw_text) != 0:
-        selected_ingredient = raw_text.split(',') #remove spaces, lowercase force and split via comma
+        tmp_ingredient = raw_text.split(',') #remove spaces, lowercase force and split via comma
+        for ingre in tmp_ingredient: # strip outer spaces
+            ingre = ingre.strip()
+            selected_ingredient.append(ingre)
+            q_receipes(list(set(selected_ingredient)))
+    selected_ingredient = list(set(selected_ingredient))
+    skip = True
     return "", 204
 
 @app.route('/ingre', methods=['GET'])
@@ -64,19 +83,23 @@ def put_selected_ingre():
 def get_matched_recipes():
     print("selected are:")
     print(selected_ingredient)
+    global matched_recipes
     global shuffle_counter
+    global skip
     # get matched recipes from db with the fields and params as indicated below
-    completed_recipes_info = get_completed_recipes_info(conn, selected_ingredient)
+    print(skip)
+    if not skip:
+        completed_recipes_info = get_completed_recipes_info(conn, selected_ingredient)
+        matched_recipes["size"] += len(completed_recipes_info)
+        for recipe_info in completed_recipes_info:
+            recipe_data = {
+                "name": recipe_info[1],
+                "time": recipe_info[2],
+                "link": recipe_info[3]
+            }
+            matched_recipes["data"].append(recipe_data)
 
-    matched_recipes["size"] += len(completed_recipes_info)
-    for recipe_info in completed_recipes_info:
-        recipe_data = {
-            "name": recipe_info[1],
-            "time": recipe_info[2],
-            "link": recipe_info[3]
-        }
-        matched_recipes["data"].append(recipe_data)
-
+    skip = False
     shuffle_counter = 0;
     print("matched size is:")
     print(matched_recipes["size"])

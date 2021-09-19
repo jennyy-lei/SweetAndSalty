@@ -52,11 +52,12 @@ export default function CustomizeModal({open, handleCancel, handleClose, submit}
     const handleSubmit = () => {
         httpPost("/init", { data: ingredients, time: timeLimit }).then(((data) => {
             console.log("done post");
+            handleClose();
+            submit(timeLimit, ingredients);
         }).bind(this));
         // httpPost("/init", { data: ingredients, time: timeLimit });
         
-        handleClose();
-        submit(timeLimit, ingredients);
+        
     };
 
     return (
